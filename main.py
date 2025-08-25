@@ -9,7 +9,6 @@ from dotenv import load_dotenv
 load_dotenv()
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 
-# Basit health endpoint: Render "port dinliyor mu?" diye bakınca OK döner
 class HealthHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         self.send_response(200)
@@ -17,10 +16,11 @@ class HealthHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"OK")
 
 async def start(update, context):
-    await update.message.reply_text("✅ Bot calisiyor! İngilizce pratik hazir. /code ile basla")
+    await update.message.reply_text("✅ Bot çalışıyor! İngilizce pratik hazır.")
 
 def run_http():
-    port = int(os.environ.get("PORT", "10000"))  # Render PORT env atar
+    port = int(os.environ.get("PORT", 10000))   # Render’ın verdiği PORT’u al
+    print(f"Starting health server on port {port}")
     server = HTTPServer(("0.0.0.0", port), HealthHandler)
     server.serve_forever()
 
@@ -33,7 +33,7 @@ def run_bot():
     app.run_polling()
 
 if __name__ == "__main__":
-    # HTTP'yi ayrı thread'de çalıştır (Web Service mutlu)
+    # HTTP server thread
     threading.Thread(target=run_http, daemon=True).start()
     # Telegram bot polling
-    run_bot()
+    run_bot()ü
